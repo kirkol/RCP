@@ -78,8 +78,6 @@ public class Login {
 		connection=RCPdatabaseConnection.dbConnector("user0", "1234"); // pierwsze polaczenie z baza jest na user0 (nie ma zadnego konta w programie na tym userze). 
 																	   //Sprawdza wtedy co to jest za uzytkownik i ustawia go (zamyka polaczenie usera0, a otwiera na odpowiednim dla uzytkownika - user2 lub user3) do kolejnych polaczen
 	}
-	
-
 	/**
 	 * Initialize the contents of the frame.
 	 */

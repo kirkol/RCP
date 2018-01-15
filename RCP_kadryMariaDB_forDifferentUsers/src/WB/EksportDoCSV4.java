@@ -805,7 +805,8 @@ public class EksportDoCSV4 extends JFrame {
 	//nastepnie litera a podmieniana jest przez pusty znak
 	public void ExportFunction(Connection connection){
 		
-		File file = new File("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+		//File file = new File("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+		File file = new File("//192.168.90.203/Common/EksportRCP/RCPdoSymfonii.txt");
 		if(file.exists()){
 			if(file.delete()){
 				JOptionPane.showMessageDialog(null, "Skasowano poprzedni plik");
@@ -849,7 +850,8 @@ public class EksportDoCSV4 extends JFrame {
 					+ "WHEN akcja='wyjscie' "
 					+ " THEN REPLACE(akcja, 'wyjscie', 0) END, "
 					+ "'1000010000000' AS koncowkaDlaSymfonii  "
-					+ "into OUTFILE '//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt' FIELDS TERMINATED BY 'a' LINES TERMINATED BY '\r\n' "
+					//+ "into OUTFILE '//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt' FIELDS TERMINATED BY 'a' LINES TERMINATED BY '\r\n' "
+					+ "into OUTFILE '//192.168.90.203/Common/EksportRCP/RCPdoSymfonii.txt' FIELDS TERMINATED BY 'a' LINES TERMINATED BY '\r\n' "
 					+ "FROM temporary2Export ORDER BY data DESC";
 			PreparedStatement pst=connection.prepareStatement(query);
 			pst.executeQuery();
@@ -859,13 +861,16 @@ public class EksportDoCSV4 extends JFrame {
 			e.printStackTrace();
 		}
 		// oczekiwanie na pelne zapisanie sie pliku (dopiero jak sie caly zapisze, to lec dalej)
-		File file2 = new File("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+		//File file2 = new File("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+		File file2 = new File("//192.168.90.203/Common/EksportRCP/RCPdoSymfonii.txt");
 		while(!file2.exists()){
-			file2 = new File("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+			//file2 = new File("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+			file2 = new File("//192.168.90.203/Common/EksportRCP/RCPdoSymfonii.txt");
 		}
 		// podmiana 'a' na ''
 			System.out.println("aaa");
-			Path path = Paths.get("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+			//Path path = Paths.get("//192.168.90.203/Logistyka/Tosia/EksportRCP/RCPdoSymfonii.txt");
+			Path path = Paths.get("//192.168.90.203/Common/EksportRCP/RCPdoSymfonii.txt");
 			Charset cs = StandardCharsets.UTF_8;
 			try {
 				String content = new String(Files.readAllBytes(path), cs);

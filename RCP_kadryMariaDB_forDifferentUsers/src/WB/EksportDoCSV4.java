@@ -170,9 +170,9 @@ public class EksportDoCSV4 extends JFrame {
 		btnPodmienKarteGoscia.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		dateChooserOD = new JDateChooser();
-		dateChooserOD.setDateFormatString("yyyy-MM-dd HH:mm");
+		dateChooserOD.setDateFormatString("yyyy-MM-dd");
 		dateChooserDO = new JDateChooser();
-		dateChooserDO.setDateFormatString("yyyy-MM-dd HH:mm");
+		dateChooserDO.setDateFormatString("yyyy-MM-dd");
 		
 		JLabel lblNewLabel = new JLabel((String) null);
 		
@@ -250,7 +250,7 @@ public class EksportDoCSV4 extends JFrame {
 					String karta = (table3.getModel().getValueAt(row,0)).toString();
 					String akcja = (table3.getModel().getValueAt(row,1)).toString();
 					Date data = (Date) (table3.getModel().getValueAt(row, 2));
-					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:ss");
 					String dateStr = dateFormat.format(data);
 					
 					textField_2.setText(karta);
@@ -284,7 +284,6 @@ public class EksportDoCSV4 extends JFrame {
 					ShowTable3(connection, table3);
 					button.setEnabled(true);
 				}else{
-					System.out.println(((JTextField)dateChooserOD.getDateEditor().getUiComponent()).getText());
 					JOptionPane.showMessageDialog(null, "Nie wypelniono pola daty");
 				}
 				
@@ -443,7 +442,9 @@ public class EksportDoCSV4 extends JFrame {
 		contentPane.setLayout(gl_contentPane);	
 		
 		}
-	
+	// przygotowuje fragment tabeli wejsc/wyjsc do wyeksportowania
+	// wycina odpowiedni fragment z tabeli access i wrzuca ja do tabeli temporary2export
+	// pobiera tez numery karty gosci z wycietego zakresu i wrzuca je do comboboxa sugerujac, ze dobrze by bylo je podmienic
 	public void ShowTable(Connection connection, JTable table)
 	{
 		ArrayList<String> listaKartGosci = new ArrayList<String>();
@@ -466,13 +467,13 @@ public class EksportDoCSV4 extends JFrame {
 			String dataDOString;
 			Date dataOD = dateChooserOD.getDate();
 			Date dataDO = dateChooserDO.getDate();
-			DateFormat FD = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			DateFormat FD = new SimpleDateFormat("yyyy-MM-dd");
 			if(dataOD==null || dataDO==null){
 				dataODString = "";
 				dataDOString = "";
 			}else{
-				dataODString = FD.format(dataOD);
-				dataDOString = FD.format(dataDO);
+				dataODString = FD.format(dataOD)+" 00:00";
+				dataDOString = FD.format(dataDO)+" 23:59";
 			}
 			
 			System.out.println(dataODString);
@@ -587,6 +588,7 @@ public class EksportDoCSV4 extends JFrame {
 		}
 	}
 	
+	// z wybranego zakresu pokazuje wpisy wejsc/wyjsc na karte goscia - sugeruje ich podmiane
 	public void ShowTable3(Connection connection, JTable table3)
 	{
 		try {
@@ -645,12 +647,12 @@ public class EksportDoCSV4 extends JFrame {
 	{
 		String dataODString;
 		String dataDOString;
-		String todayString;
+		//String todayString;
 		Date dataOD = dateChooserOD.getDate();
 		Date dataDO = dateChooserDO.getDate();
 		Date today = new Date();
-		DateFormat FD = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		todayString = FD.format(today);
+		DateFormat FD = new SimpleDateFormat("yyyy-MM-dd");
+		//todayString = FD.format(today);
 		if(dataOD==null || dataDO==null){
 			dataODString = "";
 			dataDOString = "";
@@ -660,7 +662,7 @@ public class EksportDoCSV4 extends JFrame {
 		}
 		
 		try {
-			String query="INSERT INTO exportHistory VALUES ('"+dataODString+"', '"+dataDOString+"', '"+todayString+"')";
+			String query="INSERT INTO exportHistory (OD, DO) VALUES ('"+dataODString+"', '"+dataDOString+"')";
 			PreparedStatement pst=connection.prepareStatement(query);
 			pst.execute();
 			pst.close();
@@ -741,7 +743,7 @@ public class EksportDoCSV4 extends JFrame {
 	// przygotowuje tabele temporary2Export do eksportu
 	// sprawdza czy pominieto podmiane karty goscia (jesli tak, to spyta czy na pewno chcemy zrobic eksport)
 	// jesli zostana jakies pozycje z zarejestrowanymi kartami goscia, to zostana usuniete (Symfonia nie moze zobaczyc tych wpisow, bo to nie pracownicy)
-	// usuniete zostana tez numery kart, ktore nie maja przypisanych imion i nazwisk pracownikow (filtruje zapisy powstale przy wzbudzeniu sie czytnikow)
+	// usuniete zostana tez numery kart, ktore nie maja przypisanych imion i nazwisk pracownikow (filtruje zapisy powstale przy wzbudzeniu sie czytnikow) !!!!!!!!!!!!!!!!!!!!!!!!!
 	public int prepare2Export(Connection connection, JTable table)
 	{	
 		int i = -1;
@@ -772,21 +774,12 @@ public class EksportDoCSV4 extends JFrame {
 						JOptionPane.showMessageDialog(null, "Sprobuj jeszcze raz - baza jest zajeta");
 						e.printStackTrace();
 					}
-//					try {
-//						String query2="DELETE temporary2Export FROM temporary2Export LEFT JOIN cards_name_surname_nrhacosoft ON temporary2Export.id_karty=cards_name_surname_nrhacosoft.id_karty WHERE cards_name_surname_nrhacosoft.nazwisko_imie=null";
-//						PreparedStatement pst2=connection.prepareStatement(query2);
-//						pst2.execute();
-//						pst2.close();
-//					} catch (Exception e) {
-//						JOptionPane.showMessageDialog(null, "Sprobuj jeszcze raz - baza jest zajeta");
-//						e.printStackTrace();
-//					}
 					return i=0;
 		        }
 		        else {
 		        	pst.close();
 					rs.close();
-		            // nastapi wstrzymanie eksportu
+		            // nastapi wstrzymanie eksportu, bo uzytkownik jednak chce podmienic wpisy z kart goscia
 					return i=-1;
 		        }
 			}else{
@@ -800,7 +793,7 @@ public class EksportDoCSV4 extends JFrame {
 	}
 	
 	//usuwa poprzednio zapisany plik
-	//zrzut do pliku txt na 192.168.90.203\Logistyka\Tosia\ExportRCP
+	//zrzut do pliku txt na //192.168.90.203/Common/EksportRCP/RCPdoSymfonii.txt
 	//po zrzucie z bazy do pliku separatorem jest litera 'a' (nie da sie ustawic pustego znaku)
 	//nastepnie litera a podmieniana jest przez pusty znak
 	public void ExportFunction(Connection connection){
@@ -810,6 +803,12 @@ public class EksportDoCSV4 extends JFrame {
 		if(file.exists()){
 			if(file.delete()){
 				JOptionPane.showMessageDialog(null, "Skasowano poprzedni plik");
+				try {
+					TimeUnit.SECONDS.sleep(5);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}else{
 				JOptionPane.showMessageDialog(null, "NIE UDALO SIE SKASOWAC PLIKU");
 			}

@@ -1,5 +1,6 @@
 package WB;
 import java.awt.Image;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -61,6 +62,7 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JSeparator;
+import javax.swing.DropMode;
 
 
 
@@ -86,6 +88,8 @@ public class EksportDoCSV4 extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
+	private JTextField txtWszyscy;
+	private JButton buttonPodgladTabeli;
 
 	/**
 	 * Launch the application.
@@ -270,7 +274,7 @@ public class EksportDoCSV4 extends JFrame {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Century", Font.BOLD, 18));
 		
-		JButton buttonPodgladTabeli = new JButton("Podgl\u0105d tabeli");
+		buttonPodgladTabeli = new JButton("Podgl\u0105d tabeli");
 		buttonPodgladTabeli.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(((JTextField)dateChooserOD.getDateEditor().getUiComponent()).getText()!=null||((JTextField)dateChooserDO.getDateEditor().getUiComponent()).getText()!=null){
@@ -309,9 +313,19 @@ public class EksportDoCSV4 extends JFrame {
 		
 		JSeparator separator = new JSeparator();
 		
+		JLabel lblNewLabel_3 = new JLabel("Eksport dla:");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+		
+		txtWszyscy = new JTextField();
+		txtWszyscy.setToolTipText("wpisz nr karty pracownika");
+		txtWszyscy.setHorizontalAlignment(SwingConstants.CENTER);
+		txtWszyscy.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtWszyscy.setText("wszyscy");
+		txtWszyscy.setColumns(10);
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
@@ -344,18 +358,14 @@ public class EksportDoCSV4 extends JFrame {
 					.addComponent(lblZnalezioneKartyGocia, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
 					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(122)
-					.addComponent(button, GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-					.addGap(106))
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
 					.addGap(16)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addComponent(textField_2, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(textField_2, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(textField_3, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+							.addComponent(textField_3, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
 							.addGap(7)
-							.addComponent(textField_4, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
+							.addComponent(textField_4, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
 						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
 					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
@@ -382,10 +392,16 @@ public class EksportDoCSV4 extends JFrame {
 					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(16)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
-						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
-						.addComponent(label, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel_3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtWszyscy, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+							.addGap(18)
+							.addComponent(button, GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+						.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+						.addComponent(label, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -436,8 +452,11 @@ public class EksportDoCSV4 extends JFrame {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(button, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-					.addGap(110))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(lblNewLabel_3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(txtWszyscy)
+						.addComponent(button, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+					.addGap(5))
 		);
 		contentPane.setLayout(gl_contentPane);	
 		
@@ -746,6 +765,21 @@ public class EksportDoCSV4 extends JFrame {
 	// usuniete zostana tez numery kart, ktore nie maja przypisanych imion i nazwisk pracownikow (filtruje zapisy powstale przy wzbudzeniu sie czytnikow) !!!!!!!!!!!!!!!!!!!!!!!!!
 	public int prepare2Export(Connection connection, JTable table)
 	{	
+		if(!txtWszyscy.getText().equals("wszyscy")){
+			buttonPodgladTabeli.doClick();
+			try {
+				String query2="DELETE FROM temporary2Export WHERE id_karty<> "+txtWszyscy.getText()+"";
+				PreparedStatement pst2=connection.prepareStatement(query2);
+				pst2.execute();
+				pst2.close();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Sprobuj jeszcze raz - baza jest zajeta");
+				e.printStackTrace();
+			}
+		}else{
+			// nic nie zmieniaj (wyeksportuje zapisy wszystkich pracownikow)
+		}
+		
 		int i = -1;
 		String kartyGosciWtemporary2Export = listaKartZTemporary2Export.toString();
 		kartyGosciWtemporary2Export = kartyGosciWtemporary2Export.replace('[', '(');

@@ -66,7 +66,7 @@ public class PodgladTabel extends JFrame {
 		lblMenu.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMenu.setFont(new Font("Century", Font.BOLD, 24));
 		
-		JButton btnNewButton = new JButton("Tabela aktywnych kart");
+		JButton btnNewButton = new JButton("Aktywne karty");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PodgladDaneKart okno = new PodgladDaneKart(connection);
@@ -76,7 +76,7 @@ public class PodgladTabel extends JFrame {
 		btnNewButton.setToolTipText("Wy\u015Bwietla tabel\u0119 ostatnich 500 przej\u015B\u0107 przez bramk\u0119");
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
-		JButton btnDodajUsunKarte = new JButton("Tabela kart zablokowanych");
+		JButton btnDodajUsunKarte = new JButton("Kart zablokowane");
 		btnDodajUsunKarte.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PodgladTabeliKartZablokowanych okno = new PodgladTabeliKartZablokowanych(connection);
@@ -85,7 +85,7 @@ public class PodgladTabel extends JFrame {
 		});
 		btnDodajUsunKarte.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
-		JButton btnZablokujodblokujKart = new JButton("Tabela kart go\u015Bci");
+		JButton btnZablokujodblokujKart = new JButton("Karty go\u015Bci");
 		btnZablokujodblokujKart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PodgladTabeliGosci okno = new PodgladTabeliGosci(connection);

@@ -140,10 +140,10 @@ public class PodgladDaneKart extends JFrame {
 					.addGap(45)
 					.addComponent(lblMojeMenu, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 315, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
 					.addGap(26)
 					.addComponent(odswiez, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(40, Short.MAX_VALUE))
+					.addGap(40))
 		);
 		contentPane.setLayout(gl_contentPane);
 		
@@ -153,8 +153,8 @@ public class PodgladDaneKart extends JFrame {
 	{
 		
 		try {
-			String query="SELECT cards_name_surname_nrHacoSoft.id_karty, cards_name_surname_nrHacoSoft.nazwisko_imie, cards_name_surname_nrHacoSoft.HacoSoftnumber, keys_permissions.nr_kluczy "
-					+ "FROM cards_name_surname_nrHacoSoft LEFT OUTER JOIN keys_permissions ON cards_name_surname_nrHacoSoft.id_karty=keys_permissions.id_karty";
+			String query="SELECT cards_name_surname_nrHacoSoft.id_karty, cards_name_surname_nrHacoSoft.nazwisko_imie, cards_name_surname_nrHacoSoft.HacoSoftnumber, keys_permissions.nr_kluczy, cards_name_surname_nrHacoSoft.stanowisko, cards_name_surname_nrHacoSoft.firma "
+					+ "FROM cards_name_surname_nrHacoSoft LEFT OUTER JOIN keys_permissions ON cards_name_surname_nrHacoSoft.id_karty=keys_permissions.id_karty ORDER BY cards_name_surname_nrHacoSoft.nazwisko_imie";
 			PreparedStatement pst=connection.prepareStatement(query);
 			ResultSet rs=pst.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));

@@ -55,6 +55,10 @@ public class DaneKarty extends JFrame {
 	private JTextField txt3;
 	private JTextField textField_nrHacoSoft;
 	private JButton btnArchiwizujKarte;
+	private JTextField txt4;
+	private JTextField textField_firma;
+	private JTextField txt5;
+	private JTextField textField_stanowisko;
 
 	/**
 	 * Launch the application.
@@ -137,10 +141,32 @@ public class DaneKarty extends JFrame {
 		textField_nrHacoSoft.setHorizontalAlignment(SwingConstants.CENTER);
 		textField_nrHacoSoft.setColumns(10);
 		
+		txt4 = new JTextField();
+		txt4.setText("FIRMA");
+		txt4.setHorizontalAlignment(SwingConstants.CENTER);
+		txt4.setFont(new Font("Tahoma", Font.BOLD, 14));
+		txt4.setEditable(false);
+		txt4.setColumns(10);
+		
+		textField_firma = new JTextField();
+		textField_firma.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_firma.setColumns(10);
+		
+		txt5 = new JTextField();
+		txt5.setText("STANOWISKO");
+		txt5.setHorizontalAlignment(SwingConstants.CENTER);
+		txt5.setFont(new Font("Tahoma", Font.BOLD, 14));
+		txt5.setEditable(false);
+		txt5.setColumns(10);
+		
+		textField_stanowisko = new JTextField();
+		textField_stanowisko.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_stanowisko.setColumns(10);
+		
 		JButton btnNowaKarta = new JButton("Nowa karta");
 		btnNowaKarta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(!(textField_nrKarty.getText().equals("")||textField_nazwImie.getText().equals("")||textField_nrHacoSoft.getText().equals(""))){
+				if(!(textField_nrKarty.getText().equals("")||textField_nazwImie.getText().equals("")||textField_nrHacoSoft.getText().equals("")||textField_firma.getText().equals("")||textField_stanowisko.getText().equals(""))){
 					Statement st = null;
 					ResultSet rs = null;
 					try {
@@ -157,7 +183,7 @@ public class DaneKarty extends JFrame {
 								st2 = connection.createStatement();
 								rs2 = st2.executeQuery("SELECT nazwisko_imie FROM cards_name_surname_nrHacoSoft USE INDEX (idx_nazwisko_imie) WHERE nazwisko_imie='"+textField_nazwImie.getText()+"'");
 								if(rs2.next()){
-									JOptionPane.showMessageDialog(null, "Ten pracownik ma ju¿ swoj¹ kartê!");
+									JOptionPane.showMessageDialog(null, "Ten pracownik ma ju¿ swoj¹ kartê");
 								}else{
 									st2.close();
 									rs2.close();
@@ -172,7 +198,7 @@ public class DaneKarty extends JFrame {
 											st3.close();
 											rs3.close();
 											try {
-												String query="INSERT INTO cards_name_surname_nrHacoSoft (id_karty, nazwisko_imie, HacoSoftnumber) VALUES ('"+textField_nrKarty.getText()+"', '"+textField_nazwImie.getText()+"', '"+textField_nrHacoSoft.getText()+"')";
+												String query="INSERT INTO cards_name_surname_nrHacoSoft (id_karty, nazwisko_imie, HacoSoftnumber, stanowisko, firma) VALUES ('"+textField_nrKarty.getText()+"', '"+textField_nazwImie.getText()+"', '"+textField_nrHacoSoft.getText()+"', '"+textField_stanowisko.getText()+"', '"+textField_firma.getText()+"')";
 												PreparedStatement pst=connection.prepareStatement(query);
 												pst.execute();
 												pst.close();
@@ -219,10 +245,12 @@ public class DaneKarty extends JFrame {
 					ResultSet rs = null;
 					try {
 						st = connection.createStatement();
-						rs = st.executeQuery("SELECT id_karty, nazwisko_imie, HacoSoftnumber FROM cards_name_surname_nrHacoSoft USE INDEX (idx_id_karty) WHERE id_karty='"+textField_nrKarty.getText()+"'");
+						rs = st.executeQuery("SELECT id_karty, nazwisko_imie, HacoSoftnumber, stanowisko, firma FROM cards_name_surname_nrHacoSoft USE INDEX (idx_id_karty) WHERE id_karty='"+textField_nrKarty.getText()+"'");
 						if(rs.next()){
 							textField_nazwImie.setText(rs.getString("nazwisko_imie"));
 							textField_nrHacoSoft.setText(rs.getString("HacoSoftnumber"));
+							textField_stanowisko.setText(rs.getString("stanowisko"));
+							textField_firma.setText(rs.getString("firma"));
 							st.close();
 							rs.close();
 						}else{
@@ -249,7 +277,7 @@ public class DaneKarty extends JFrame {
 					ResultSet rs = null;
 					try {
 						st = connection.createStatement();
-						rs = st.executeQuery("SELECT id_karty, nazwisko_imie, HacoSoftnumber FROM cards_name_surname_nrHacoSoft USE INDEX (idx_id_karty) WHERE id_karty='"+textField_nrKarty.getText()+"'");
+						rs = st.executeQuery("SELECT id_karty, nazwisko_imie, HacoSoftnumber, stanowisko, firma FROM cards_name_surname_nrHacoSoft USE INDEX (idx_id_karty) WHERE id_karty='"+textField_nrKarty.getText()+"'");
 						if(rs.next()){
 							int YesNo = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usun¹æ kartê?", "Usuniêcie karty", JOptionPane.YES_NO_OPTION);
 							if(YesNo == JOptionPane.YES_OPTION){
@@ -264,6 +292,8 @@ public class DaneKarty extends JFrame {
 									textField_nrKarty.setText("");
 									textField_nazwImie.setText("");
 									textField_nrHacoSoft.setText("");
+									textField_stanowisko.setText("");
+									textField_firma.setText("");
 								}catch(SQLException e3){
 									// TODO Auto-generated catch block
 									JOptionPane.showMessageDialog(null, "Sprobuj jeszcze raz - baza jest zajeta");
@@ -296,10 +326,12 @@ public class DaneKarty extends JFrame {
 						ResultSet rs = null;
 						try {
 							st = connection.createStatement();
-							rs = st.executeQuery("SELECT id_karty, nazwisko_imie, HacoSoftnumber FROM cards_name_surname_nrHacoSoft USE INDEX (idx_id_karty) WHERE id_karty='"+textField_nrKarty.getText()+"'");
+							rs = st.executeQuery("SELECT id_karty, nazwisko_imie, HacoSoftnumber, stanowisko, firma FROM cards_name_surname_nrHacoSoft USE INDEX (idx_id_karty) WHERE id_karty='"+textField_nrKarty.getText()+"'");
 							if(rs.next()){
 								textField_nazwImie.setText(rs.getString("nazwisko_imie"));
 								textField_nrHacoSoft.setText(rs.getString("HacoSoftnumber"));
+								textField_stanowisko.setText(rs.getString("stanowisko"));
+								textField_firma.setText(rs.getString("firma"));
 								st.close();
 								rs.close();
 							}else{
@@ -320,7 +352,7 @@ public class DaneKarty extends JFrame {
 		btnArchiwizujKarte.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					String query="SELECT id_karty, nazwisko_imie, HacoSoftnumber FROM cards_name_surname_nrhacosoft WHERE id_karty='"+textField_nrKarty.getText()+"' AND nazwisko_imie='"+textField_nazwImie.getText()+"' AND HacoSoftnumber='"+textField_nrHacoSoft.getText()+"'";
+					String query="SELECT id_karty, nazwisko_imie, HacoSoftnumber, stanowisko, firma FROM cards_name_surname_nrhacosoft WHERE id_karty='"+textField_nrKarty.getText()+"' AND nazwisko_imie='"+textField_nazwImie.getText()+"' AND HacoSoftnumber='"+textField_nrHacoSoft.getText()+"'";
 					PreparedStatement pst=connection.prepareStatement(query);
 					ResultSet rs=pst.executeQuery();
 					if(rs.next()){
@@ -336,7 +368,7 @@ public class DaneKarty extends JFrame {
 						}
 						// wpisuje karte do tabeli archiwum
 						try {
-							String query3="INSERT INTO cardsarchive (id_karty, nazwisko_imie, HacoSoftnumber) VALUES ('"+textField_nrKarty.getText()+"', '"+textField_nazwImie.getText()+"', '"+textField_nrHacoSoft.getText()+"')";
+							String query3="INSERT INTO cardsarchive (id_karty, nazwisko_imie, HacoSoftnumber, stanowisko, firma) VALUES ('"+textField_nrKarty.getText()+"', '"+textField_nazwImie.getText()+"', '"+textField_nrHacoSoft.getText()+"', '"+textField_stanowisko.getText()+"', '"+textField_firma.getText()+"')";
 							PreparedStatement pst3=connection.prepareStatement(query3);
 							pst3.executeQuery();
 							pst3.close();
@@ -389,6 +421,20 @@ public class DaneKarty extends JFrame {
 					.addComponent(textField_nrHacoSoft, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
 					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+					.addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(txt4, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)
+					.addComponent(textField_firma, GroupLayout.PREFERRED_SIZE, 198, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(txt5, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)
+					.addComponent(textField_stanowisko, GroupLayout.PREFERRED_SIZE, 198, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 					.addGap(120)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnArchiwizujKarte, GroupLayout.PREFERRED_SIZE, 217, Short.MAX_VALUE)
@@ -396,10 +442,6 @@ public class DaneKarty extends JFrame {
 						.addComponent(btnUsuKart, GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
 						.addComponent(btnNowaKarta, GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
 					.addGap(104))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
-					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -418,15 +460,23 @@ public class DaneKarty extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(txt3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addComponent(textField_nrHacoSoft, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(txt4, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_firma, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(txt5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField_stanowisko, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
-					.addComponent(btnNowaKarta, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnNowaKarta, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnUsuKart, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnUsuKart, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnSprawdzDaneKarty, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnSprawdzDaneKarty, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnArchiwizujKarte, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+					.addComponent(btnArchiwizujKarte, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
